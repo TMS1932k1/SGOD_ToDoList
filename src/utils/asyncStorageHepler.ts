@@ -1,27 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ToDo} from '../types';
 
-export const storageSetToDo = async (
-  todo: ToDo,
-  onSuccess?: () => void,
-  onError?: () => void,
-) => {
+export const storageSetToDoList = async (todos: ToDo[]): Promise<boolean> => {
   try {
-    const jsonValue = JSON.stringify(todo);
+    const jsonValue = JSON.stringify(todos);
     await AsyncStorage.setItem('@todos', jsonValue);
-    onSuccess && onSuccess();
+    return true;
   } catch (e) {
     console.log(e);
-    onError && onError();
   }
+  return false;
 };
 
-export const readTodoList = async (): Promise<ToDo[] | null> => {
+export const storageReadTodoList = async (): Promise<ToDo[] | undefined> => {
   try {
     const jsonValue = await AsyncStorage.getItem('@todos');
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
+    return jsonValue != null ? JSON.parse(jsonValue) : undefined;
   } catch (e) {
     console.log(e);
-    return null;
+    return undefined;
   }
 };

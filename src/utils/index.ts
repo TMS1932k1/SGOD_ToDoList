@@ -1,4 +1,13 @@
 import {regexEditInput} from './regexHepler';
-import {storageSetToDo} from './asyncStorageHepler';
+import {
+  storageSetToDoList,
+  storageReadTodoList,
+  storageMergeToDoList,
+} from './asyncStorageHepler';
 
-export {regexEditInput, storageSetToDo};
+export {
+  regexEditInput,
+  storageSetToDoList,
+  storageReadTodoList,
+  storageMergeToDoList,
+};

@@ -1,11 +1,11 @@
-import {configureStore} from '@reduxjs/toolkit';
+import {AsyncThunk, configureStore} from '@reduxjs/toolkit';
 import {useDispatch, useSelector} from 'react-redux';
 import type {TypedUseSelectorHook} from 'react-redux';
-import editSlice from './edit/editSlice';
+import todosSlice from './homeSlice';
 
 export const store = configureStore({
   reducer: {
-    editState: editSlice,
+    todoState: todosSlice,
   },
 });
 
@@ -18,3 +18,8 @@ export type AppDispatch = typeof store.dispatch;
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+type GenericAsyncThunk = AsyncThunk<unknown, unknown, any>;
+export type PendingAction = ReturnType<GenericAsyncThunk['pending']>;
+export type RejectedAction = ReturnType<GenericAsyncThunk['rejected']>;
+export type FulfilledAction = ReturnType<GenericAsyncThunk['fulfilled']>;

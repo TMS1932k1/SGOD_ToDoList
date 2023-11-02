@@ -1,5 +1,5 @@
 import {ToDo} from './ToDo';
-import {Progress} from './Progress';
+import {Filter} from './Filter';
 
 export type {ToDo};
-export {Progress};
+export {Filter};
