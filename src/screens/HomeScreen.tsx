@@ -1,12 +1,18 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useCallback, useEffect, useLayoutEffect} from 'react';
-import {MyDimension, MyStylers} from '../constants';
+import {MyApp, MyDimension, MyStylers} from '../constants';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootNavigatorParams} from '../navigator';
-import {Indicator, InputText, TextBtn, TodoList} from '../components';
-import {ToDo} from '../types';
+import {
+  DropdownBtn,
+  Indicator,
+  InputText,
+  TextBtn,
+  TodoList,
+} from '../components';
+import {Filter, ToDo} from '../types';
 import {useAppDispatch, useAppSelector} from '../store/store';
-import {readTodos} from '../store/homeSlice';
+import {filterTodo, readTodos, searchTodo} from '../store/homeSlice';
 
 interface Props {
   navigation: NativeStackNavigationProp<RootNavigatorParams, 'HomeScreen'>;
@@ -37,15 +43,31 @@ export default function HomeScreen({navigation}: Props) {
     [navigation],
   );
 
-  // Hanlder add button
+  // Hanlde add button
   const onAddBtn = useCallback(() => {
     navigateToEditScreen();
   }, []);
 
-  // Handler edit button
+  // Handle edit button
   const onEditTodo = useCallback((todo: ToDo) => {
     navigateToEditScreen(todo);
   }, []);
+
+  // Handle search todo with text
+  const onChangeSearch = useCallback(
+    (value: string) => {
+      dispatch(searchTodo(value));
+    },
+    [dispatch],
+  );
+
+  // Handle filter to with current item
+  const onChangeDropdown = useCallback(
+    (item: {label: Filter; value: Filter}) => {
+      dispatch(filterTodo(item.label));
+    },
+    [dispatch],
+  );
 
   if (isLoading) {
     return <Indicator />;
@@ -53,7 +75,12 @@ export default function HomeScreen({navigation}: Props) {
 
   return (
     <View style={[MyStylers.rootContainer, styles.container]}>
-      <InputText placeholder="Search to do..." />
+      <InputText placeholder="Search to do..." onChangeText={onChangeSearch} />
+      <DropdownBtn
+        style={styles.dropdown}
+        data={MyApp.filter}
+        onChange={onChangeDropdown}
+      />
       <TodoList style={styles.list} onPressItem={onEditTodo} />
     </View>
   );
@@ -66,5 +93,8 @@ const styles = StyleSheet.create({
   list: {
     marginTop: MyDimension.pandingLarge,
     flex: 1,
+  },
+  dropdown: {
+    marginTop: MyDimension.pandingLarge,
   },
 });

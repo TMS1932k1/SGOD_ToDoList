@@ -14,6 +14,7 @@ interface Props {
 export default function TodoList({style, onPressItem}: Props) {
   const dispatch = useAppDispatch();
   const todos = useAppSelector(state => state.todoState.todos);
+  const fileredTodos = useAppSelector(state => state.todoState.filtedTodos);
 
   const delTodo = async (id: string) => {
     let newTodo = todos.filter(item => {
@@ -47,7 +48,7 @@ export default function TodoList({style, onPressItem}: Props) {
     <View style={[style]}>
       <FlatList
         keyExtractor={item => item.id}
-        data={todos}
+        data={fileredTodos}
         renderItem={({item}) => (
           <TodoItem
             todo={item}
