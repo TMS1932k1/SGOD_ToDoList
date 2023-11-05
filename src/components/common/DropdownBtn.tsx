@@ -2,6 +2,7 @@ import {View, ViewStyle, StyleProp, StyleSheet} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import React from 'react';
 import {Filter} from '../../types';
+import {MyApp} from '../../constants';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -15,6 +16,7 @@ export default function DropdownBtn({data, style, onChange}: Props) {
       <Dropdown
         style={styles.dropdown}
         data={data}
+        value={MyApp.filter[0]}
         labelField="label"
         valueField="value"
         onChange={onChange}

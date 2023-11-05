@@ -1,10 +1,10 @@
 import {View, ViewStyle, StyleProp, FlatList} from 'react-native';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {useAppDispatch, useAppSelector} from '../../store/store';
-import {TodoItem} from './TodoItem';
 import {ToDo} from '../../types';
 import {storageSetToDoList} from '../../utils';
 import {updateTodo} from '../../store/homeSlice';
+import TodoItem from './TodoItem';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -44,21 +44,26 @@ export default function TodoList({style, onPressItem}: Props) {
     }
   };
 
+  const renderItem = useCallback(
+    (item: ToDo) => (
+      <TodoItem
+        todo={item}
+        onPress={() => {
+          if (onPressItem) onPressItem(item);
+        }}
+        onDelete={delTodo}
+        onDone={doneTodo}
+      />
+    ),
+    [delTodo, doneTodo],
+  );
+
   return (
     <View style={[style]}>
       <FlatList
         keyExtractor={item => item.id}
         data={fileredTodos}
-        renderItem={({item}) => (
-          <TodoItem
-            todo={item}
-            onPress={() => {
-              if (onPressItem) onPressItem(item);
-            }}
-            onDelete={delTodo}
-            onDone={doneTodo}
-          />
-        )}
+        renderItem={({item}) => renderItem(item)}
       />
     </View>
   );

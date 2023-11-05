@@ -12,7 +12,7 @@ interface Props {
   onDone?: (isDone: boolean, id: string) => void;
 }
 
-const TodoItem = memo(({todo, onPress, onDelete, onDone}: Props) => {
+export default function TodoItem({todo, onPress, onDelete, onDone}: Props) {
   return (
     <Pressable
       style={({pressed}) => [
@@ -38,8 +38,7 @@ const TodoItem = memo(({todo, onPress, onDelete, onDone}: Props) => {
       </TextBtn>
     </Pressable>
   );
-});
-export {TodoItem};
+}
 
 const styles = StyleSheet.create({
   container: {

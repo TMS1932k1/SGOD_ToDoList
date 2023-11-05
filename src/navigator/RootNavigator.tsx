@@ -1,39 +1,39 @@
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  NativeStackNavigationOptions,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
 import {EditScreen, HomeScreen} from '../screens';
 import {MyColors} from '../constants';
-import {ToDo} from '../types';
+import {RootNavigatorParams, RootStackRoutesType} from '../configs/routes';
 
-const Stack = createNativeStackNavigator<RootNavigatorParams>();
+const RootStack = createNativeStackNavigator<RootNavigatorParams>();
+
+const rootStackRoutes: RootStackRoutesType = [
+  {name: 'HomeScreen', component: HomeScreen},
+  {name: 'EditScreen', component: EditScreen},
+];
+
+const options: NativeStackNavigationOptions = {
+  headerShadowVisible: false,
+  headerStyle: {
+    backgroundColor: MyColors.backgroundColor,
+  },
+  contentStyle: {
+    backgroundColor: MyColors.backgroundColor,
+  },
+};
 
 export default function RootNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
+      <RootStack.Navigator
         initialRouteName="HomeScreen"
-        screenOptions={{
-          headerShadowVisible: false,
-          headerStyle: {
-            backgroundColor: MyColors.backgroundColor,
-          },
-          contentStyle: {
-            backgroundColor: MyColors.backgroundColor,
-          },
-        }}>
-        <Stack.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-          options={{
-            title: 'TODO List',
-          }}
-        />
-        <Stack.Screen name="EditScreen" component={EditScreen} />
-      </Stack.Navigator>
+        screenOptions={options}>
+        {rootStackRoutes.map(stackRoute => (
+          <RootStack.Screen key={stackRoute.name} {...stackRoute} />
+        ))}
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 }
-
-export type RootNavigatorParams = {
-  HomeScreen: undefined;
-  EditScreen: {todo?: ToDo};
-};

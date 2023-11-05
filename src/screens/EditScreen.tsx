@@ -1,22 +1,18 @@
 import {View, StyleSheet} from 'react-native';
 import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {MyDimension, MyStylers} from '../constants';
-import {RootNavigatorParams} from '../navigator';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RouteProp} from '@react-navigation/native';
 import {EditInput, TextBtn} from '../components';
 import {regexEditInput} from '../utils';
 import {ToDo} from '../types';
 import {useAppDispatch, useAppSelector} from '../store/store';
 import {addNewTodo, updateTodo} from '../store/homeSlice';
 import {storageSetToDoList} from '../utils/asyncStorageHepler';
+import {RootStackScreenProps} from '../configs/routes';
 
-interface Props {
-  navigation: NativeStackNavigationProp<RootNavigatorParams, 'EditScreen'>;
-  route: RouteProp<RootNavigatorParams, 'EditScreen'>;
-}
-
-export default function EditScreen({navigation, route}: Props) {
+export default function EditScreen({
+  navigation,
+  route,
+}: RootStackScreenProps<'EditScreen'>) {
   const todos = useAppSelector(state => state.todoState.todos);
   const dispatch = useAppDispatch();
 
@@ -25,22 +21,22 @@ export default function EditScreen({navigation, route}: Props) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: route.params.todo ? 'Edit ToDo' : 'Add ToDo',
+      title: route.params?.todo ? 'Edit ToDo' : 'Add ToDo',
       headerRight: () => (
         <TextBtn
           onPress={
-            route.params.todo
-              ? () => handlerEditToDo(route.params.todo!.id)
+            route.params?.todo
+              ? () => handlerEditToDo(route.params!.todo!.id)
               : handlerSaveToDo
           }>
-          {route.params.todo ? 'EDIT' : 'SAVE'}
+          {route.params?.todo ? 'EDIT' : 'SAVE'}
         </TextBtn>
       ),
     });
   }, [navigation, route, titleText, contentText]);
 
   useEffect(() => {
-    if (route.params.todo) {
+    if (route.params?.todo) {
       let title = route.params.todo.title!;
       let content = route.params.todo.content!;
       setTitleText({value: title, isValid: regexEditInput(title)});

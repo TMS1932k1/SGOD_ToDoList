@@ -13,6 +13,7 @@ import {
 import {Filter, ToDo} from '../types';
 import {useAppDispatch, useAppSelector} from '../store/store';
 import {filterTodo, readTodos, searchTodo} from '../store/homeSlice';
+import {startTransition} from 'react';
 
 interface Props {
   navigation: NativeStackNavigationProp<RootNavigatorParams, 'HomeScreen'>;
@@ -24,6 +25,7 @@ export default function HomeScreen({navigation}: Props) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      title: 'TODO List',
       headerRight: () => <TextBtn onPress={onAddBtn}>ADD</TextBtn>,
     });
   }, [navigation]);
@@ -54,12 +56,10 @@ export default function HomeScreen({navigation}: Props) {
   }, []);
 
   // Handle search todo with text
-  const onChangeSearch = useCallback(
-    (value: string) => {
+  const onChangeSearch = (value: string) =>
+    startTransition(() => {
       dispatch(searchTodo(value));
-    },
-    [dispatch],
-  );
+    });
 
   // Handle filter to with current item
   const onChangeDropdown = useCallback(
