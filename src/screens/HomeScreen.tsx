@@ -1,8 +1,7 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useLayoutEffect} from 'react';
 import {MyApp, MyDimension, MyStylers} from '../constants';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootNavigatorParams} from '../navigator';
+
 import {
   DropdownBtn,
   Indicator,
@@ -14,9 +13,10 @@ import {Filter, ToDo} from '../types';
 import {useAppDispatch, useAppSelector} from '../store/store';
 import {filterTodo, readTodos, searchTodo} from '../store/homeSlice';
 import {startTransition} from 'react';
+import {RootStackNavigationScreenProps} from '../configs/routes';
 
 interface Props {
-  navigation: NativeStackNavigationProp<RootNavigatorParams, 'HomeScreen'>;
+  navigation: RootStackNavigationScreenProps<'HomeScreen'>;
 }
 
 export default function HomeScreen({navigation}: Props) {
@@ -38,9 +38,11 @@ export default function HomeScreen({navigation}: Props) {
   //  + todo?: ToDo  todo is need edit, won't pass param will is add todo
   const navigateToEditScreen = useCallback(
     (todo?: ToDo) => {
-      navigation.navigate('EditScreen', {
-        todo: todo,
-      });
+      if (todo) {
+        navigation.navigate('EditScreen', {todo: todo});
+      } else {
+        navigation.navigate('EditScreen');
+      }
     },
     [navigation],
   );

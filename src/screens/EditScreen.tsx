@@ -7,12 +7,20 @@ import {ToDo} from '../types';
 import {useAppDispatch, useAppSelector} from '../store/store';
 import {addNewTodo, updateTodo} from '../store/homeSlice';
 import {storageSetToDoList} from '../utils/asyncStorageHepler';
-import {RootStackScreenProps} from '../configs/routes';
 
-export default function EditScreen({
-  navigation,
-  route,
-}: RootStackScreenProps<'EditScreen'>) {
+import {useRoute} from '@react-navigation/native';
+import {
+  RootStackNavigationScreenProps,
+  RootStackRouteScreenProps,
+} from '../configs/routes';
+
+interface Props {
+  navigation: RootStackNavigationScreenProps<'EditScreen'>;
+}
+
+export default function EditScreen({navigation}: Props) {
+  const route = useRoute<RootStackRouteScreenProps<'EditScreen'>>();
+
   const todos = useAppSelector(state => state.todoState.todos);
   const dispatch = useAppDispatch();
 
