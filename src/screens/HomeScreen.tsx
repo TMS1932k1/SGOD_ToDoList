@@ -1,7 +1,6 @@
 import {StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useLayoutEffect} from 'react';
 import {MyApp, MyDimension, MyStylers} from '../constants';
-
 import {
   DropdownBtn,
   Indicator,
