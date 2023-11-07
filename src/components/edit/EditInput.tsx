@@ -9,12 +9,11 @@ import {
 } from 'react-native';
 import React from 'react';
 import {MyColors, MyDimension, MyFonts} from '../../constants';
-import {Control, Controller, RegisterOptions} from 'react-hook-form';
+import {Controller, UseControllerProps} from 'react-hook-form';
 import {InputsEdit} from '../../types';
 
 interface Props {
-  name: 'title' | 'content';
-  control: Control<InputsEdit, any>;
+  controllerProps: UseControllerProps<Omit<InputsEdit, 'deadline'>>;
   placeholder?: string;
   numberOfLines?: number;
   keyboardType?: KeyboardTypeOptions;
@@ -22,23 +21,17 @@ interface Props {
   label?: string;
   isValid?: boolean;
   mesInvalid?: string;
-  rules?: Omit<
-    RegisterOptions<InputsEdit, 'title' | 'content'>,
-    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-  >;
 }
 
 export default function EditInput({
-  name,
+  controllerProps: {control, name, rules},
   style,
   label,
-  control,
   placeholder,
   keyboardType,
   numberOfLines,
   isValid,
   mesInvalid = 'Value is invalid',
-  rules,
 }: Props) {
   return (
     <View style={[style]}>

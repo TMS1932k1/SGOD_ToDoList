@@ -2,7 +2,11 @@ import {View, ViewStyle, StyleProp, FlatList} from 'react-native';
 import React, {useCallback} from 'react';
 import {useAppDispatch, useAppSelector} from '../../store/store';
 import {ToDo} from '../../types';
-import {storageSetToDoList} from '../../utils';
+import {
+  cancleNotifee,
+  createTriggerNotification,
+  storageSetToDoList,
+} from '../../utils';
 import {updateTodo} from '../../store/homeSlice';
 import TodoItem from './TodoItem';
 
@@ -23,6 +27,7 @@ export default function TodoList({style, onPressItem}: Props) {
 
     if (await storageSetToDoList(newTodo)) {
       dispatch(updateTodo(newTodo));
+      await cancleNotifee(id);
     }
   };
 
@@ -34,6 +39,7 @@ export default function TodoList({style, onPressItem}: Props) {
           title: item.title,
           content: item.content,
           isDone: isDone,
+          deadline: item.deadline,
         };
       }
       return item;
@@ -41,6 +47,16 @@ export default function TodoList({style, onPressItem}: Props) {
 
     if (await storageSetToDoList(newTodo)) {
       dispatch(updateTodo(newTodo));
+      let index = newTodo.findIndex(item => item.id === id);
+      if (
+        !isDone &&
+        new Date().getTime() <
+          new Date(newTodo[index].deadline).getTime() - 5 * 60000
+      ) {
+        await createTriggerNotification(newTodo[index]);
+      } else {
+        await cancleNotifee(id);
+      }
     }
   };
 

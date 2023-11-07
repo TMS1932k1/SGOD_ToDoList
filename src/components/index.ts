@@ -6,6 +6,8 @@ import Indicator from './common/Indicator';
 import TodoList from './home/TodoList';
 import TodoItem from './home/TodoItem';
 import DropdownBtn from './common/DropdownBtn';
+import DeadlineSession from './edit/DeadlineSession';
+import SelectedDateItem from './edit/SelectedDateItem';
 
 export {
   TextBtn,
@@ -16,4 +18,6 @@ export {
   TodoList,
   TodoItem,
   DropdownBtn,
+  DeadlineSession,
+  SelectedDateItem,
 };

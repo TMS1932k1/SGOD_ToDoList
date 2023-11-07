@@ -3,4 +3,5 @@ export type ToDo = {
   title: string;
   content: string;
   isDone: boolean;
+  deadline: string;
 };

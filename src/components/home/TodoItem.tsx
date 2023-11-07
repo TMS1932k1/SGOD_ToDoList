@@ -4,6 +4,7 @@ import {ToDo} from '../../types';
 import CheckBox from '@react-native-community/checkbox';
 import {MyDimension, MyFonts, MyStylers} from '../../constants';
 import TextBtn from '../common/TextBtn';
+import Moment from 'moment';
 
 interface Props {
   todo: ToDo;
@@ -29,6 +30,9 @@ export default function TodoItem({todo, onPress, onDelete, onDone}: Props) {
       <View style={styles.infoContainer}>
         <Text style={[MyFonts.body1]}>{todo.title}</Text>
         <Text style={[MyFonts.body2]}>{todo.content}</Text>
+        <Text style={[MyFonts.body2]}>
+          {Moment(new Date(todo.deadline)).format('lll')}
+        </Text>
       </View>
       <TextBtn
         onPress={() => {
