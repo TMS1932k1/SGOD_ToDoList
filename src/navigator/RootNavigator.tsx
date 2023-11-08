@@ -1,4 +1,4 @@
-import {NavigationContainer} from '@react-navigation/native';
+import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
 import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
@@ -14,6 +14,22 @@ const rootStackRoutes: RootStackRoutesType = [
   {name: 'EditScreen', component: EditScreen},
 ];
 
+const linking: LinkingOptions<RootNavigatorParams> = {
+  prefixes: ['myapp://', 'https://app.myapp.com'],
+  config: {
+    initialRouteName: 'HomeScreen',
+    screens: {
+      HomeScreen: 'home',
+      EditScreen: {
+        path: 'edit/:todo',
+        parse: {
+          todo: todo => JSON.parse(todo),
+        },
+      },
+    },
+  },
+};
+
 const options: NativeStackNavigationOptions = {
   headerShadowVisible: false,
   headerStyle: {
@@ -26,7 +42,7 @@ const options: NativeStackNavigationOptions = {
 
 export default function RootNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <RootStack.Navigator
         initialRouteName="HomeScreen"
         screenOptions={options}>

@@ -1,4 +1,10 @@
-import {View, ViewStyle, StyleProp, FlatList} from 'react-native';
+import {
+  View,
+  ViewStyle,
+  StyleProp,
+  FlatList,
+  RefreshControl,
+} from 'react-native';
 import React, {useCallback} from 'react';
 import {useAppDispatch, useAppSelector} from '../../store/store';
 import {ToDo} from '../../types';
@@ -7,7 +13,7 @@ import {
   createTriggerNotification,
   storageSetToDoList,
 } from '../../utils';
-import {updateTodo} from '../../store/homeSlice';
+import {readTodos, updateTodo} from '../../store/homeSlice';
 import TodoItem from './TodoItem';
 
 interface Props {
@@ -19,6 +25,17 @@ export default function TodoList({style, onPressItem}: Props) {
   const dispatch = useAppDispatch();
   const todos = useAppSelector(state => state.todoState.todos);
   const fileredTodos = useAppSelector(state => state.todoState.filtedTodos);
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      // Read again todolist
+      dispatch(readTodos());
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const delTodo = async (id: string) => {
     let newTodo = todos.filter(item => {
@@ -77,6 +94,9 @@ export default function TodoList({style, onPressItem}: Props) {
   return (
     <View style={[style]}>
       <FlatList
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         keyExtractor={item => item.id}
         data={fileredTodos}
         renderItem={({item}) => renderItem(item)}

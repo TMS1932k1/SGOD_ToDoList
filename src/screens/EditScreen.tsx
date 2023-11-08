@@ -1,4 +1,4 @@
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import React, {useCallback, useLayoutEffect} from 'react';
 import {MyDimension, MyStylers} from '../constants';
 import {DeadlineSession, EditInput, TextBtn} from '../components';
@@ -13,6 +13,7 @@ import {
 } from '../configs/routes';
 import {useForm} from 'react-hook-form';
 import {cancleNotifee, createTriggerNotification} from '../utils';
+import {Header} from 'react-native/Libraries/NewAppScreen';
 
 interface Props {
   navigation: RootStackNavigationScreenProps<'EditScreen'>;
@@ -114,38 +115,51 @@ export default function EditScreen({navigation}: Props) {
   );
 
   return (
-    <View style={[MyStylers.rootContainer, styles.container]}>
-      <EditInput
-        controllerProps={{
-          name: 'title',
-          rules: {required: true, minLength: 1},
-          control,
-        }}
-        label="Title"
-        placeholder="Input todo's title"
-        isValid={errors.title ? false : true}
-        mesInvalid="Please input todo's title"
-      />
-      <EditInput
-        controllerProps={{
-          name: 'content',
-          rules: {required: true, minLength: 1},
-          control,
-        }}
-        style={styles.inputContent}
-        label="Content"
-        placeholder="Input todo's content"
-        isValid={errors.content ? false : true}
-        mesInvalid="Please input todo's content"
-      />
-      <DeadlineSession control={control} style={styles.deadline} />
-    </View>
+    <KeyboardAvoidingView
+      style={MyStylers.rootContainer}
+      keyboardVerticalOffset={Header.height + 47}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View style={[MyStylers.rootContainer, styles.container]}>
+        <View style={styles.inputContainer}>
+          <EditInput
+            controllerProps={{
+              name: 'title',
+              rules: {required: true, minLength: 1},
+              control,
+            }}
+            label="Title"
+            placeholder="Input todo's title"
+            isValid={errors.title ? false : true}
+            mesInvalid="Please input todo's title"
+          />
+          <EditInput
+            controllerProps={{
+              name: 'content',
+              rules: {required: true, minLength: 1},
+              control,
+            }}
+            style={styles.inputContent}
+            label="Content"
+            placeholder="Input todo's content"
+            isValid={errors.content ? false : true}
+            mesInvalid="Please input todo's content"
+          />
+          <DeadlineSession control={control} style={styles.deadline} />
+        </View>
+        {route.params?.todo && <TextBtn>Delete</TextBtn>}
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: MyDimension.pandingSmall,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  inputContainer: {
+    width: '100%',
   },
   inputContent: {
     marginTop: MyDimension.pandingMedium,

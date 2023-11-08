@@ -1,4 +1,6 @@
 import notifee, {
+  AndroidCategory,
+  AndroidImportance,
   AndroidLaunchActivityFlag,
   TimestampTrigger,
   TriggerType,
@@ -33,11 +35,6 @@ export const createTriggerNotification = async (todo: ToDo) => {
       data: {todo: todo},
       android: {
         channelId: channelId,
-        pressAction: {
-          id: todo.id,
-          launchActivity: 'default',
-          launchActivityFlags: [AndroidLaunchActivityFlag.SINGLE_TOP],
-        },
       },
     },
     trigger,

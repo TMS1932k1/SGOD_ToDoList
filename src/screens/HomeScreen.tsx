@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, KeyboardAvoidingView, Platform} from 'react-native';
 import React, {useCallback, useEffect, useLayoutEffect} from 'react';
 import {MyApp, MyDimension, MyStylers} from '../constants';
 import {
@@ -13,6 +13,7 @@ import {useAppDispatch, useAppSelector} from '../store/store';
 import {filterTodo, readTodos, searchTodo} from '../store/homeSlice';
 import {startTransition} from 'react';
 import {RootStackNavigationScreenProps} from '../configs/routes';
+import {Header} from 'react-native/Libraries/NewAppScreen';
 
 interface Props {
   navigation: RootStackNavigationScreenProps<'HomeScreen'>;
@@ -75,15 +76,23 @@ export default function HomeScreen({navigation}: Props) {
   }
 
   return (
-    <View style={[MyStylers.rootContainer, styles.container]}>
-      <InputText placeholder="Search to do..." onChangeText={onChangeSearch} />
-      <DropdownBtn
-        style={styles.dropdown}
-        data={MyApp.filter}
-        onChange={onChangeDropdown}
-      />
-      <TodoList style={styles.list} onPressItem={onEditTodo} />
-    </View>
+    <KeyboardAvoidingView
+      style={MyStylers.rootContainer}
+      keyboardVerticalOffset={Header.height + 47}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View style={[MyStylers.rootContainer, styles.container]}>
+        <InputText
+          placeholder="Search to do..."
+          onChangeText={onChangeSearch}
+        />
+        <DropdownBtn
+          style={styles.dropdown}
+          data={MyApp.filter}
+          onChange={onChangeDropdown}
+        />
+        <TodoList style={styles.list} onPressItem={onEditTodo} />
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
+import {Linking, SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 import notifee, {EventType} from '@notifee/react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {RootNavigator} from './src/navigator';
@@ -12,13 +12,21 @@ function App(): JSX.Element {
 
   // Subscribe to events
   useEffect(() => {
-    return notifee.onForegroundEvent(({type, detail}) => {
+    return notifee.onForegroundEvent(async ({type, detail}) => {
       switch (type) {
         case EventType.DISMISSED:
-          console.log('User dismissed notification', detail.notification);
+          const {notification} = detail;
+          if (notification?.id)
+            await notifee.cancelNotification(notification.id);
           break;
         case EventType.PRESS:
           console.log('User pressed notification', detail.notification);
+          const data = detail.notification?.data?.todo;
+          if (data) {
+            Linking.openURL(`myapp://edit/${JSON.stringify(data)}`);
+          }
+          if (notification?.id)
+            await notifee.cancelNotification(notification.id);
           break;
       }
     });
