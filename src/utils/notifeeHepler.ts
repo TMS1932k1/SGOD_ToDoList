@@ -1,17 +1,41 @@
-import notifee, {
-  AndroidCategory,
-  AndroidImportance,
-  AndroidLaunchActivityFlag,
-  TimestampTrigger,
-  TriggerType,
-} from '@notifee/react-native';
+import notifee, {TimestampTrigger, TriggerType} from '@notifee/react-native';
 import {ToDo} from '../types';
 import Moment from 'moment';
 
-export const createTriggerNotification = async (todo: ToDo) => {
+export const createPermissionNotification = async () => {
   // Request permissions (required for iOS)
   await notifee.requestPermission();
 
+  // Create a channel (required for Android)
+  await notifee.createChannel({
+    id: 'updateid',
+    name: 'Update detail',
+  });
+};
+
+export const createDisplayNotification = async (
+  title?: string,
+  body?: string,
+) => {
+  await notifee.displayNotification({
+    id: 'update',
+    title: title ?? "Update's detail",
+    body: body ?? "This is update's detail of todo app",
+    android: {
+      channelId: 'updateid',
+      actions: [
+        {
+          title: 'Read',
+          pressAction: {
+            id: 'read',
+          },
+        },
+      ],
+    },
+  });
+};
+
+export const createTriggerNotification = async (todo: ToDo) => {
   // Create a channel (required for Android)
   const channelId = await notifee.createChannel({
     id: todo.id,

@@ -2,7 +2,7 @@ import {View, Text, StyleProp, ViewStyle, StyleSheet} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {MyFonts} from '../../constants';
 import DatePicker from 'react-native-date-picker';
-import SelectedDateItem from './SelectedDateItem';
+import SelectedDateItem from './SelectedDateItem.component';
 import {InputsEdit} from '../../types';
 import {Control, Controller} from 'react-hook-form';
 

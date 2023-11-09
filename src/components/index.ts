@@ -1,13 +1,13 @@
-import TextBtn from './common/TextBtn';
-import InputText from './common/InputText';
-import EditInput from './edit/EditInput';
-import SubmitBtn from './edit/SubmitBtn';
-import Indicator from './common/Indicator';
-import TodoList from './home/TodoList';
-import TodoItem from './home/TodoItem';
-import DropdownBtn from './common/DropdownBtn';
-import DeadlineSession from './edit/DeadlineSession';
-import SelectedDateItem from './edit/SelectedDateItem';
+import TextBtn from './common/TextBtn.component';
+import InputText from './common/InputText.component';
+import EditInput from './edit/EditInput.component';
+import SubmitBtn from './edit/SubmitBtn. component';
+import Indicator from './common/Indicator.component';
+import TodoList from './home/TodoList.component';
+import TodoItem from './home/TodoItem.component';
+import DropdownBtn from './common/DropdownBtn.component';
+import DeadlineSession from './edit/DeadlineSession.compenent';
+import SelectedDateItem from './edit/SelectedDateItem.component';
 
 export {
   TextBtn,

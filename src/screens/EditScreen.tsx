@@ -7,13 +7,13 @@ import {useAppDispatch, useAppSelector} from '../store/store';
 import {addNewTodo, updateTodo} from '../store/homeSlice';
 import {storageSetToDoList} from '../utils/asyncStorageHepler';
 import {useRoute} from '@react-navigation/native';
-import {
-  RootStackNavigationScreenProps,
-  RootStackRouteScreenProps,
-} from '../configs/routes';
 import {useForm} from 'react-hook-form';
 import {cancleNotifee, createTriggerNotification} from '../utils';
 import {Header} from 'react-native/Libraries/NewAppScreen';
+import {
+  RootStackNavigationScreenProps,
+  RootStackRouteScreenProps,
+} from '../routes';
 
 interface Props {
   navigation: RootStackNavigationScreenProps<'EditScreen'>;

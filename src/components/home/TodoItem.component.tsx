@@ -3,7 +3,7 @@ import React, {memo} from 'react';
 import {ToDo} from '../../types';
 import CheckBox from '@react-native-community/checkbox';
 import {MyDimension, MyFonts, MyStylers} from '../../constants';
-import TextBtn from '../common/TextBtn';
+import TextBtn from '../common/TextBtn.component';
 import Moment from 'moment';
 
 interface Props {

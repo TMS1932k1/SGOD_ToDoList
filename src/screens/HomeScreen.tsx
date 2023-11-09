@@ -10,10 +10,16 @@ import {
 } from '../components';
 import {Filter, ToDo} from '../types';
 import {useAppDispatch, useAppSelector} from '../store/store';
-import {filterTodo, readTodos, searchTodo} from '../store/homeSlice';
+import {
+  fetchToken,
+  filterTodo,
+  readTodos,
+  searchTodo,
+} from '../store/homeSlice';
 import {startTransition} from 'react';
-import {RootStackNavigationScreenProps} from '../configs/routes';
 import {Header} from 'react-native/Libraries/NewAppScreen';
+import {RootStackNavigationScreenProps} from '../routes';
+import {fcmSendMessage} from '../utils';
 
 interface Props {
   navigation: RootStackNavigationScreenProps<'HomeScreen'>;
@@ -21,16 +27,27 @@ interface Props {
 
 export default function HomeScreen({navigation}: Props) {
   const dispatch = useAppDispatch();
+  const token = useAppSelector(state => state.todoState.token);
   const isLoading = useAppSelector(state => state.todoState.isLoading);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'TODO List',
-      headerRight: () => <TextBtn onPress={onAddBtn}>ADD</TextBtn>,
+      headerRight: () => (
+        <View style={{flexDirection: 'row'}}>
+          <TextBtn onPress={onAddBtn}>ADD</TextBtn>
+          {token && (
+            <TextBtn style={styles.action} onPress={onUpdateBtn}>
+              UPDATE
+            </TextBtn>
+          )}
+        </View>
+      ),
     });
-  }, [navigation]);
+  }, [navigation, token]);
 
   useEffect(() => {
+    dispatch(fetchToken());
     dispatch(readTodos());
   }, []);
 
@@ -47,10 +64,15 @@ export default function HomeScreen({navigation}: Props) {
     [navigation],
   );
 
-  // Hanlde add button
+  // Handle add button
   const onAddBtn = useCallback(() => {
     navigateToEditScreen();
   }, []);
+
+  // Handle update btn
+  const onUpdateBtn = useCallback(async () => {
+    await fcmSendMessage(token!);
+  }, [token]);
 
   // Handle edit button
   const onEditTodo = useCallback((todo: ToDo) => {
@@ -99,6 +121,12 @@ export default function HomeScreen({navigation}: Props) {
 const styles = StyleSheet.create({
   container: {
     padding: MyDimension.pandingSmall,
+  },
+  actionRight: {
+    flexDirection: 'row',
+  },
+  action: {
+    marginLeft: MyDimension.pandingSmall,
   },
   list: {
     marginTop: MyDimension.pandingLarge,

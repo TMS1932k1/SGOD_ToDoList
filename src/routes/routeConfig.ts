@@ -4,7 +4,7 @@ import {
   RouteProp,
   StackNavigationState,
 } from '@react-navigation/native';
-import {ToDo} from '../../types';
+import {ToDo} from '../types';
 import {
   NativeStackNavigationEventMap,
   NativeStackNavigationOptions,
@@ -25,6 +25,7 @@ type StackRoutesType<ParamList extends ParamListBase> = Array<
 export type RootNavigatorParams = {
   HomeScreen: undefined;
   EditScreen: {todo: ToDo} | undefined;
+  InfoUpdateScreen: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootNavigatorParams> =

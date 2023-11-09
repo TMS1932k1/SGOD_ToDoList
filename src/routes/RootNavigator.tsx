@@ -3,15 +3,16 @@ import {
   NativeStackNavigationOptions,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
-import {EditScreen, HomeScreen} from '../screens';
+import {EditScreen, HomeScreen, InfoUpdateScreen} from '../screens';
 import {MyColors} from '../constants';
-import {RootNavigatorParams, RootStackRoutesType} from '../configs/routes';
+import {RootNavigatorParams, RootStackRoutesType} from './routeConfig';
 
 const RootStack = createNativeStackNavigator<RootNavigatorParams>();
 
 const rootStackRoutes: RootStackRoutesType = [
   {name: 'HomeScreen', component: HomeScreen},
   {name: 'EditScreen', component: EditScreen},
+  {name: 'InfoUpdateScreen', component: InfoUpdateScreen},
 ];
 
 const linking: LinkingOptions<RootNavigatorParams> = {
@@ -26,6 +27,7 @@ const linking: LinkingOptions<RootNavigatorParams> = {
           todo: todo => JSON.parse(todo),
         },
       },
+      InfoUpdateScreen: 'infoupdate',
     },
   },
 };

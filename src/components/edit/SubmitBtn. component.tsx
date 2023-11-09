@@ -1,8 +1,8 @@
 import {View, Text} from 'react-native';
 import React, {ReactNode} from 'react';
-import TextBtn from '../common/TextBtn';
+import TextBtn from '../common/TextBtn.component';
 import {useAppSelector} from '../../store/store';
-import Indicator from '../common/Indicator';
+import Indicator from '../common/Indicator.component';
 
 interface Props {
   children: ReactNode;

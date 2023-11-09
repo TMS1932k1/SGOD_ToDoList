@@ -1,13 +1,18 @@
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {Filter, ToDo} from '../types';
-import {storageReadTodoList} from '../utils/asyncStorageHepler';
+import {
+  storageReadTodoList,
+  storageReadToken,
+} from '../utils/asyncStorageHepler';
 import {FulfilledAction, PendingAction, RejectedAction} from './store';
+import {createPermissionNotification, fcmGetToken} from '../utils';
 
 interface HomeState {
   todos: ToDo[];
   filtedTodos: ToDo[];
   searchText: string;
   filter: Filter;
+  token?: string;
   isLoading: boolean;
 }
 
@@ -22,6 +27,16 @@ const initialState: HomeState = {
 export const readTodos = createAsyncThunk('todos', async () =>
   storageReadTodoList(),
 );
+
+export const fetchToken = createAsyncThunk('token', async () => {
+  await createPermissionNotification();
+  const token = await storageReadToken();
+  if (token) {
+    return token;
+  } else {
+    return await fcmGetToken();
+  }
+});
 
 const getFiltedTodos = (todos: ToDo[], searchText: string, filter: Filter) => {
   return todos.filter(item => {
@@ -97,6 +112,11 @@ const todosSlice = createSlice({
             state.searchText,
             state.filter,
           );
+        }
+      })
+      .addCase(fetchToken.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.token = action.payload;
         }
       })
       .addMatcher<PendingAction>(

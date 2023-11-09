@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "329024455798",
+    "project_id": "sgod-todo",
+    "storage_bucket": "sgod-todo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329024455798:android:0beab05304d47fab9f0b57",
+        "android_client_info": {
+          "package_name": "com.sgod"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBP6jedUa0FEu8DkfHN8ujoDJ00ptDaaUw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

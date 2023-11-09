@@ -14,7 +14,7 @@ import {
   storageSetToDoList,
 } from '../../utils';
 import {readTodos, updateTodo} from '../../store/homeSlice';
-import TodoItem from './TodoItem';
+import TodoItem from './TodoItem.component';
 
 interface Props {
   style?: StyleProp<ViewStyle>;

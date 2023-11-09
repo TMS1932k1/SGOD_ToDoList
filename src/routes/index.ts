@@ -1,3 +1,4 @@
+import RootNavigator from './RootNavigator';
 import {
   RootStackRoutesType,
   RootNavigatorParams,
@@ -6,6 +7,7 @@ import {
   RootStackScreenProps,
 } from './routeConfig';
 
+export {RootNavigator};
 export type {
   RootStackRoutesType,
   RootNavigatorParams,
