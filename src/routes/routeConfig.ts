@@ -26,6 +26,7 @@ export type RootNavigatorParams = {
   HomeScreen: undefined;
   EditScreen: {todo: ToDo} | undefined;
   InfoUpdateScreen: undefined;
+  SettingScreen: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootNavigatorParams> =

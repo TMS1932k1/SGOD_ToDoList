@@ -8,11 +8,7 @@ import {
 import React, {useCallback} from 'react';
 import {useAppDispatch, useAppSelector} from '../../store/store';
 import {ToDo} from '../../types';
-import {
-  cancleNotifee,
-  createTriggerNotification,
-  storageSetToDoList,
-} from '../../utils';
+import {cancleNotifee, createTriggerNotification, save} from '../../utils';
 import {readTodos, updateTodo} from '../../store/homeSlice';
 import TodoItem from './TodoItem.component';
 
@@ -42,7 +38,7 @@ export default function TodoList({style, onPressItem}: Props) {
       if (item.id !== id) return item;
     });
 
-    if (await storageSetToDoList(newTodo)) {
+    if (await save('@todos', newTodo)) {
       dispatch(updateTodo(newTodo));
       await cancleNotifee(id);
     }
@@ -62,7 +58,7 @@ export default function TodoList({style, onPressItem}: Props) {
       return item;
     });
 
-    if (await storageSetToDoList(newTodo)) {
+    if (await save('@todos', newTodo)) {
       dispatch(updateTodo(newTodo));
       let index = newTodo.findIndex(item => item.id === id);
       if (

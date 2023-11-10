@@ -5,6 +5,8 @@ import {
   KeyboardTypeOptions,
   ViewStyle,
   StyleProp,
+  TextStyle,
+  ColorValue,
 } from 'react-native';
 import React from 'react';
 import {MyColors, MyDimension, MyFonts} from '../../constants';
@@ -15,6 +17,7 @@ interface Props {
   numberOfLines?: number;
   keyboardType?: KeyboardTypeOptions;
   style?: StyleProp<ViewStyle>;
+  colorPlaceHolder?: ColorValue;
   onChangeText?: (text: string) => void;
 }
 
@@ -24,6 +27,7 @@ export default function InputText({
   numberOfLines = 1,
   keyboardType,
   style,
+  colorPlaceHolder,
   onChangeText,
 }: Props) {
   return (
@@ -32,6 +36,7 @@ export default function InputText({
         value={value}
         style={[MyFonts.body1]}
         placeholder={placeholder}
+        placeholderTextColor={colorPlaceHolder}
         numberOfLines={numberOfLines}
         keyboardType={keyboardType}
         onChangeText={onChangeText}

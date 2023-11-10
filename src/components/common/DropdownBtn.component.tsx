@@ -8,14 +8,16 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   onChange: (item: {label: Filter; value: Filter}) => void;
   data: {label: Filter; value: Filter}[];
+  color?: string;
 }
 
-export default function DropdownBtn({data, style, onChange}: Props) {
+export default function DropdownBtn({data, style, onChange, color}: Props) {
   return (
     <View style={[styles.container, style]}>
       <Dropdown
         style={styles.dropdown}
         data={data}
+        iconColor={color}
         value={MyApp.filter[0]}
         labelField="label"
         valueField="value"

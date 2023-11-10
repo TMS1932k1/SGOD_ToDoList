@@ -6,6 +6,8 @@ import {
   StyleSheet,
   TextInput,
   KeyboardTypeOptions,
+  TextStyle,
+  ColorValue,
 } from 'react-native';
 import React from 'react';
 import {MyColors, MyDimension, MyFonts} from '../../constants';
@@ -21,6 +23,8 @@ interface Props {
   label?: string;
   isValid?: boolean;
   mesInvalid?: string;
+  styleText?: StyleProp<TextStyle>;
+  placehoderColor?: ColorValue;
 }
 
 export default function EditInput({
@@ -32,10 +36,12 @@ export default function EditInput({
   numberOfLines,
   isValid,
   mesInvalid = 'Value is invalid',
+  styleText,
+  placehoderColor,
 }: Props) {
   return (
     <View style={[style]}>
-      {label && <Text style={[MyFonts.body1]}>{label}</Text>}
+      {label && <Text style={[MyFonts.body1, styleText]}>{label}</Text>}
       <View style={styles.bottomContainer}>
         <Controller
           name={name}
@@ -44,8 +50,9 @@ export default function EditInput({
           render={({field: {onChange, value}}) => (
             <TextInput
               value={value}
-              style={[MyFonts.body1]}
+              style={[MyFonts.body1, styleText]}
               placeholder={placeholder}
+              placeholderTextColor={placehoderColor}
               numberOfLines={numberOfLines}
               keyboardType={keyboardType}
               onChangeText={onChange}

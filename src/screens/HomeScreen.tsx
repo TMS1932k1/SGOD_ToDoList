@@ -1,5 +1,11 @@
-import {StyleSheet, View, KeyboardAvoidingView, Platform} from 'react-native';
-import React, {useCallback, useEffect, useLayoutEffect} from 'react';
+import {
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  ColorSchemeName,
+} from 'react-native';
+import React, {useCallback, useEffect, useLayoutEffect, useMemo} from 'react';
 import {MyApp, MyDimension, MyStylers} from '../constants';
 import {
   DropdownBtn,
@@ -20,6 +26,7 @@ import {startTransition} from 'react';
 import {Header} from 'react-native/Libraries/NewAppScreen';
 import {RootStackNavigationScreenProps} from '../routes';
 import {fcmSendMessage} from '../utils';
+import {Colors} from '../theme';
 
 interface Props {
   navigation: RootStackNavigationScreenProps<'HomeScreen'>;
@@ -27,24 +34,38 @@ interface Props {
 
 export default function HomeScreen({navigation}: Props) {
   const dispatch = useAppDispatch();
+  const theme = useAppSelector(state => state.todoState.theme);
   const token = useAppSelector(state => state.todoState.token);
   const isLoading = useAppSelector(state => state.todoState.isLoading);
+
+  const styles = useMemo(() => styling(theme), [theme]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'TODO List',
       headerRight: () => (
         <View style={{flexDirection: 'row'}}>
-          <TextBtn onPress={onAddBtn}>ADD</TextBtn>
+          <TextBtn onPress={onAddBtn} styleText={styles.textColor}>
+            ADD
+          </TextBtn>
           {token && (
-            <TextBtn style={styles.action} onPress={onUpdateBtn}>
+            <TextBtn
+              style={styles.action}
+              onPress={onUpdateBtn}
+              styleText={styles.textColor}>
               UPDATE
             </TextBtn>
           )}
+          <TextBtn
+            style={styles.action}
+            onPress={onSettingBtn}
+            styleText={styles.textColor}>
+            SETTING
+          </TextBtn>
         </View>
       ),
     });
-  }, [navigation, token]);
+  }, [navigation, token, theme]);
 
   useEffect(() => {
     dispatch(fetchToken());
@@ -68,6 +89,11 @@ export default function HomeScreen({navigation}: Props) {
   const onAddBtn = useCallback(() => {
     navigateToEditScreen();
   }, []);
+
+  // Handle setting button
+  const onSettingBtn = useCallback(() => {
+    navigation.navigate('SettingScreen');
+  }, [navigation]);
 
   // Handle update btn
   const onUpdateBtn = useCallback(async () => {
@@ -93,23 +119,41 @@ export default function HomeScreen({navigation}: Props) {
     [dispatch],
   );
 
+  const colorPlacehoder = useMemo(
+    () =>
+      theme === 'dark'
+        ? Colors['dark'].colors.inputBackgroundColor
+        : Colors['light'].colors.inputBackgroundColor,
+    [theme],
+  );
+
+  const colorOnBackground = useMemo(
+    () =>
+      theme === 'dark'
+        ? Colors['dark'].colors.onBackground
+        : Colors['light'].colors.onBackground,
+    [theme],
+  );
+
   if (isLoading) {
     return <Indicator />;
   }
 
   return (
     <KeyboardAvoidingView
-      style={MyStylers.rootContainer}
+      style={[MyStylers.rootContainer]}
       keyboardVerticalOffset={Header.height + 47}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={[MyStylers.rootContainer, styles.container]}>
         <InputText
           placeholder="Search to do..."
           onChangeText={onChangeSearch}
+          colorPlaceHolder={colorPlacehoder}
         />
         <DropdownBtn
           style={styles.dropdown}
           data={MyApp.filter}
+          color={colorOnBackground}
           onChange={onChangeDropdown}
         />
         <TodoList style={styles.list} onPressItem={onEditTodo} />
@@ -118,21 +162,28 @@ export default function HomeScreen({navigation}: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: MyDimension.pandingSmall,
-  },
-  actionRight: {
-    flexDirection: 'row',
-  },
-  action: {
-    marginLeft: MyDimension.pandingSmall,
-  },
-  list: {
-    marginTop: MyDimension.pandingLarge,
-    flex: 1,
-  },
-  dropdown: {
-    marginTop: MyDimension.pandingLarge,
-  },
-});
+const styling = (theme: ColorSchemeName) =>
+  StyleSheet.create({
+    container: {
+      padding: MyDimension.pandingSmall,
+    },
+    actionRight: {
+      flexDirection: 'row',
+    },
+    action: {
+      marginLeft: MyDimension.pandingSmall,
+    },
+    textColor: {
+      color: Colors[theme === 'light' ? 'light' : 'dark'].colors.onBackground,
+    },
+    textInput: {
+      color: Colors[theme === 'dark' ? 'light' : 'dark'].colors.onBackground,
+    },
+    list: {
+      marginTop: MyDimension.pandingLarge,
+      flex: 1,
+    },
+    dropdown: {
+      marginTop: MyDimension.pandingLarge,
+    },
+  });

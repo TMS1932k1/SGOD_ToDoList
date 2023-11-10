@@ -1,11 +1,8 @@
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {Filter, ToDo} from '../types';
-import {
-  storageReadTodoList,
-  storageReadToken,
-} from '../utils/asyncStorageHepler';
 import {FulfilledAction, PendingAction, RejectedAction} from './store';
-import {createPermissionNotification, fcmGetToken} from '../utils';
+import {createPermissionNotification, fcmGetToken, get} from '../utils';
+import {ColorSchemeName} from 'react-native';
 
 interface HomeState {
   todos: ToDo[];
@@ -14,6 +11,8 @@ interface HomeState {
   filter: Filter;
   token?: string;
   isLoading: boolean;
+  theme: ColorSchemeName;
+  themeDefault: boolean;
 }
 
 const initialState: HomeState = {
@@ -22,15 +21,19 @@ const initialState: HomeState = {
   isLoading: false,
   searchText: '',
   filter: Filter.All,
+  theme: 'light',
+  themeDefault: false,
 };
 
-export const readTodos = createAsyncThunk('todos', async () =>
-  storageReadTodoList(),
-);
+export const getTheme = createAsyncThunk('theme', async () => {
+  return {theme: await get('@theme'), isDefault: await get('@isdefault')};
+});
+
+export const readTodos = createAsyncThunk('todos', async () => get('@todos'));
 
 export const fetchToken = createAsyncThunk('token', async () => {
   await createPermissionNotification();
-  const token = await storageReadToken();
+  const token = await get('@token');
   if (token) {
     return token;
   } else {
@@ -117,6 +120,13 @@ const todosSlice = createSlice({
       .addCase(fetchToken.fulfilled, (state, action) => {
         if (action.payload) {
           state.token = action.payload;
+        }
+      })
+      .addCase(getTheme.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.theme = action.payload.theme;
+          state.themeDefault = action.payload.isDefault;
+          console.log(state.theme, state.themeDefault);
         }
       })
       .addMatcher<PendingAction>(

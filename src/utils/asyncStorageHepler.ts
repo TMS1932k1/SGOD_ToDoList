@@ -1,43 +1,26 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ToDo} from '../types';
 
-export const storageSetToDoList = async (todos: ToDo[]): Promise<boolean> => {
+export const saveString = async (key: string, value: string) => {
   try {
-    const jsonValue = JSON.stringify(todos);
-    await AsyncStorage.setItem('@todos', jsonValue);
+    await AsyncStorage.setItem(key, value);
     return true;
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    return false;
   }
-  return false;
 };
 
-export const storageReadTodoList = async (): Promise<ToDo[] | undefined> => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('@todos');
-    return jsonValue != null ? JSON.parse(jsonValue) : undefined;
-  } catch (e) {
-    console.log(e);
-  }
-  return undefined;
-};
+export const save = async (key: string, value: any) =>
+  saveString(key, JSON.stringify(value));
 
-export const storageSetToken = async (token: string): Promise<boolean> => {
+export const get = async (key: string) => {
   try {
-    await AsyncStorage.setItem('@token', token);
-    return true;
-  } catch (e) {
-    console.log(e);
+    const itemString = await AsyncStorage.getItem(key);
+    if (itemString) {
+      return JSON.parse(itemString);
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
   }
-  return false;
-};
-
-export const storageReadToken = async (): Promise<string | undefined> => {
-  try {
-    const token = await AsyncStorage.getItem('@token');
-    return token ?? undefined;
-  } catch (e) {
-    console.log(e);
-  }
-  return undefined;
 };

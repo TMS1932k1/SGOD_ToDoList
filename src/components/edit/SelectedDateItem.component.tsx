@@ -1,14 +1,22 @@
-import {Text, StyleSheet, Pressable, View} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  Pressable,
+  View,
+  TextStyle,
+  StyleProp,
+} from 'react-native';
 import React from 'react';
 import {MyColors, MyDimension, MyStylers} from '../../constants';
 import Moment from 'moment';
 
 interface Props {
   date: Date;
+  styleText?: StyleProp<TextStyle>;
   onPress?: () => void;
 }
 
-export default function SelectedDateItem({date, onPress}: Props) {
+export default function SelectedDateItem({date, onPress, styleText}: Props) {
   return (
     <Pressable
       style={({pressed}) => [
@@ -16,7 +24,7 @@ export default function SelectedDateItem({date, onPress}: Props) {
         (pressed || !onPress) && MyStylers.pressed,
       ]}
       onPress={onPress}>
-      <Text>{Moment(date).format('lll')}</Text>
+      <Text style={styleText}>{Moment(date).format('lll')}</Text>
     </Pressable>
   );
 }

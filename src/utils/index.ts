@@ -1,10 +1,5 @@
 import {regexEditInput} from './regexHepler';
-import {
-  storageSetToDoList,
-  storageReadTodoList,
-  storageReadToken,
-  storageSetToken,
-} from './asyncStorageHepler';
+import {get, save, saveString} from './asyncStorageHepler';
 import {
   createPermissionNotification,
   cancleNotifee,
@@ -19,13 +14,12 @@ import {
 
 export {
   regexEditInput,
-  storageSetToDoList,
-  storageReadTodoList,
+  get,
+  save,
+  saveString,
   cancleNotifee,
   createTriggerNotification,
   fcmRequestUserPermission,
-  storageReadToken,
-  storageSetToken,
   fcmGetToken,
   fcmSendMessage,
   createDisplayNotification,

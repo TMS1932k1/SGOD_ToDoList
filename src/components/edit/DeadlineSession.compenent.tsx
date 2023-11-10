@@ -1,4 +1,11 @@
-import {View, Text, StyleProp, ViewStyle, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  StyleProp,
+  ViewStyle,
+  StyleSheet,
+  TextStyle,
+} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {MyFonts} from '../../constants';
 import DatePicker from 'react-native-date-picker';
@@ -9,9 +16,10 @@ import {Control, Controller} from 'react-hook-form';
 interface Props {
   style?: StyleProp<ViewStyle>;
   control: Control<InputsEdit>;
+  styleText?: StyleProp<TextStyle>;
 }
 
-export default function DeadlineSession({style, control}: Props) {
+export default function DeadlineSession({style, control, styleText}: Props) {
   const [isOpen, setOpen] = useState(false);
 
   const openDatePicker = useCallback(() => {
@@ -28,9 +36,18 @@ export default function DeadlineSession({style, control}: Props) {
 
   useEffect(() => {}, []);
 
-  const dateItem = useCallback((value: Date) => {
-    return <SelectedDateItem date={value} onPress={openDatePicker} />;
-  }, []);
+  const dateItem = useCallback(
+    (value: Date) => {
+      return (
+        <SelectedDateItem
+          styleText={styles.deadlineText}
+          date={value}
+          onPress={openDatePicker}
+        />
+      );
+    },
+    [styleText],
+  );
 
   return (
     <Controller
@@ -38,7 +55,7 @@ export default function DeadlineSession({style, control}: Props) {
       control={control}
       render={({field: {onChange, value}}) => (
         <View style={[styles.container, style]}>
-          <Text style={MyFonts.body1}>{'Add deadline:'}</Text>
+          <Text style={[MyFonts.body1, styleText]}>{'Add deadline:'}</Text>
           {dateItem(value!)}
           <DatePicker
             modal
@@ -60,5 +77,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  deadlineText: {
+    color: 'black',
   },
 });

@@ -1,19 +1,25 @@
-import {View, StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
-import React, {useCallback, useLayoutEffect} from 'react';
-import {MyDimension, MyStylers} from '../constants';
+import {
+  View,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  ColorSchemeName,
+} from 'react-native';
+import React, {useCallback, useLayoutEffect, useMemo} from 'react';
+import {MyColors, MyDimension, MyStylers} from '../constants';
 import {DeadlineSession, EditInput, TextBtn} from '../components';
 import {InputsEdit, ToDo} from '../types';
 import {useAppDispatch, useAppSelector} from '../store/store';
 import {addNewTodo, updateTodo} from '../store/homeSlice';
-import {storageSetToDoList} from '../utils/asyncStorageHepler';
 import {useRoute} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
-import {cancleNotifee, createTriggerNotification} from '../utils';
+import {cancleNotifee, createTriggerNotification, save} from '../utils';
 import {Header} from 'react-native/Libraries/NewAppScreen';
 import {
   RootStackNavigationScreenProps,
   RootStackRouteScreenProps,
 } from '../routes';
+import {Colors} from '../theme';
 
 interface Props {
   navigation: RootStackNavigationScreenProps<'EditScreen'>;
@@ -23,7 +29,10 @@ export default function EditScreen({navigation}: Props) {
   const route = useRoute<RootStackRouteScreenProps<'EditScreen'>>();
 
   const todos = useAppSelector(state => state.todoState.todos);
+  const theme = useAppSelector(state => state.todoState.theme);
   const dispatch = useAppDispatch();
+
+  const styles = useMemo(() => styling(theme), [theme]);
 
   const {
     control,
@@ -44,7 +53,8 @@ export default function EditScreen({navigation}: Props) {
       title: route.params?.todo ? 'Edit ToDo' : 'Add ToDo',
       headerRight: () => (
         <TextBtn
-          onPress={route.params?.todo ? handlerEditToDo() : handlerSaveToDo()}>
+          onPress={route.params?.todo ? handlerEditToDo() : handlerSaveToDo()}
+          styleText={styles.textColor}>
           {route.params?.todo ? 'EDIT' : 'SAVE'}
         </TextBtn>
       ),
@@ -63,7 +73,7 @@ export default function EditScreen({navigation}: Props) {
           deadline: data.deadline?.toString() ?? new Date().toString(),
         };
 
-        if (await storageSetToDoList([todo, ...todos])) {
+        if (await save('@todos', [todo, ...todos])) {
           dispatch(addNewTodo(todo));
           if (
             new Date().getTime() <
@@ -97,7 +107,7 @@ export default function EditScreen({navigation}: Props) {
           return item;
         });
 
-        if (await storageSetToDoList(newTodos)) {
+        if (await save('@todos', newTodos)) {
           dispatch(updateTodo(newTodos));
           if (
             !isDone &&
@@ -131,6 +141,10 @@ export default function EditScreen({navigation}: Props) {
             placeholder="Input todo's title"
             isValid={errors.title ? false : true}
             mesInvalid="Please input todo's title"
+            placehoderColor={
+              Colors[theme === 'dark' ? 'dark' : 'light'].colors.placeholder
+            }
+            styleText={styles.textColor}
           />
           <EditInput
             controllerProps={{
@@ -143,8 +157,16 @@ export default function EditScreen({navigation}: Props) {
             placeholder="Input todo's content"
             isValid={errors.content ? false : true}
             mesInvalid="Please input todo's content"
+            placehoderColor={
+              Colors[theme === 'dark' ? 'dark' : 'light'].colors.placeholder
+            }
+            styleText={styles.textColor}
           />
-          <DeadlineSession control={control} style={styles.deadline} />
+          <DeadlineSession
+            control={control}
+            style={styles.deadline}
+            styleText={styles.textColor}
+          />
         </View>
         {route.params?.todo && <TextBtn>Delete</TextBtn>}
       </View>
@@ -152,19 +174,23 @@ export default function EditScreen({navigation}: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: MyDimension.pandingSmall,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  inputContainer: {
-    width: '100%',
-  },
-  inputContent: {
-    marginTop: MyDimension.pandingMedium,
-  },
-  deadline: {
-    marginTop: MyDimension.pandingLarge,
-  },
-});
+const styling = (theme: ColorSchemeName) =>
+  StyleSheet.create({
+    container: {
+      padding: MyDimension.pandingSmall,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    inputContainer: {
+      width: '100%',
+    },
+    textColor: {
+      color: Colors[theme === 'light' ? 'light' : 'dark'].colors.onBackground,
+    },
+    inputContent: {
+      marginTop: MyDimension.pandingMedium,
+    },
+    deadline: {
+      marginTop: MyDimension.pandingLarge,
+    },
+  });

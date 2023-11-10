@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {Linking, SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 import notifee, {EventType} from '@notifee/react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -6,19 +6,30 @@ import {RootNavigator} from './src/routes';
 import {MyStylers} from './src/constants';
 import {Provider} from 'react-redux';
 import {store} from './src/store/store';
-import {createDisplayNotification} from './src/utils';
+import {createDisplayNotification, get, save} from './src/utils';
 import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 
 function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const appearance = useColorScheme();
+
+  const setAppTheme = useCallback(async () => {
+    const isFirst = await get('@isfirst');
+    if (isFirst === null) {
+      save('@theme', appearance);
+      save('@isdefault', true);
+      save('@isfirst', true);
+    }
+  }, []);
+
+  useEffect(() => {
+    setAppTheme();
+  }, [setAppTheme]);
 
   // Subscribe to events
   useEffect(() => {
     messaging().onMessage(onMessageReceived);
-    messaging().setBackgroundMessageHandler(onMessageReceived);
-
     notifee.onForegroundEvent(async ({type, detail}) => {
       const {notification, pressAction} = detail;
       switch (type) {
@@ -60,14 +71,14 @@ function App(): JSX.Element {
   };
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: appearance === 'dark' ? Colors.darker : Colors.lighter,
   };
 
   return (
     <Provider store={store}>
       <SafeAreaView style={[MyStylers.rootContainer, backgroundStyle]}>
         <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+          barStyle={appearance === 'dark' ? 'light-content' : 'dark-content'}
           backgroundColor={backgroundStyle.backgroundColor}
         />
         <RootNavigator />
