@@ -10,6 +10,7 @@ import {createDisplayNotification, get, save} from './src/utils';
 import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
+import BootSplash from 'react-native-bootsplash';
 
 function App(): JSX.Element {
   const appearance = useColorScheme();
@@ -24,8 +25,15 @@ function App(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    setAppTheme();
-  }, [setAppTheme]);
+    const init = async () => {
+      await setAppTheme();
+    };
+
+    init().finally(async () => {
+      await BootSplash.hide({fade: true});
+      console.log('BootSplash has been hidden successfully');
+    });
+  }, []);
 
   // Subscribe to events
   useEffect(() => {
